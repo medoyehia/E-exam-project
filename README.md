@@ -7,6 +7,6 @@ Task will be delivered on 10/5/2020.
 3- AJAX
 4- JQUERY
 5- JAVA SCRIPT
-6- Bootstrab
+6-Bootstrap
 
 # This Web site is responssive.
