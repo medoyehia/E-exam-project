@@ -1,0 +1,21 @@
+get init םÚהם ום־ׂה װÛבם Úבם ַבד־ׂה ַבדֽבם Þָב דַ ַָÚÊו Úבם ַבּםÊ וָ זַבהַ׃ ÊװזÝו 
+ַבד־ׂה ָהÝ׃ ַבַ׃ד בßה ַבד־ׂה Úבם ָÚֿ ָֽׁÊם
+C:\xampp\htdocs\GraduationProject
+git add *  בַײַÝֹ ßב ַבדבÝַÊ Ýם דבÝ ַבדװׁזÚ 
+git commit -m " ַם ׁ׃ַבו ַהַ Úַםׂוַ "
+git remote add origin בַָׁ״ ַבד־ׂה Úבם ּוַׂם ַָבד־ׂה Úבם github
+git push -u origin master ַבÊÛםַׁÊ ַז ַם ַּֽו ÚדבÊוַ Úבם ַבד־ׂה ַבדֽבם זַײַÝוַ Ûם ַבָÚםֿ    ßַֿ ָÚדב push
+master ַֿ ַ׃ד ַב branch
+git branch edit Úבװַה ַÚדב ַבדßַה ַבבם וÚֿב Ýםו Þָב דַ ַׁדם װÛבם Úבם ַב master    edit ַֿ ַ׃ד ַבÝׁÚ דדßה ַÛםׁו בַם ַ׃ד 
+git branch וםּםָ ßב ַבÝׁזÚ ָÊזÚ ַבדװׁזÚ זבז * דזּזֿו םָÞם ַֿ ַבÝׁÚ ַבבם זַÞÝ Úבםו ֿבזÞÊם
+git chechout edit בז Úַםׂ ַÞÝ Úבם ÝׁÚ Êַהם Ûםׁ ַבד׃Êׁ
+
+
+
+Úבװַה ַÚדב ָׁ״ ָםה ַבד׃Êׁ זַבָׁהװ ּזו זָׁײז ־ַּׁם דה ַבַָבßםװה הÝ׃ו 
+git checkout master
+git merge edit 
+ßַֿ ֿדֹּ ַבד׃Êׁ דÚ ַבםַֿÊ
+
+
+ 

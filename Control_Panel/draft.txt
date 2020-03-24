@@ -1,0 +1,1065 @@
+ $query="select username,password ,admin from students where username= '".$username."' and password='".$hashedpass."' ";
+        $result=mysqli_query($connection,$query);
+        $count=mysqli_num_rows($result);
+        if($count > 0){
+            $row=mysqli_fetch_array($result);
+            if($row['admin']==1){
+                header('Location:test.php?');
+            }
+                echo ' not admin but student';
+       
+        }else{
+            echo 'false';
+        }
+    }
+---------------------------------------
+
+
+if($_SERVER['REQUEST_METHOD']== 'POST'){
+        $username=$_POST['user'];
+        $password=$_POST['pass'];
+        $hashedpass= sha1($password);
+        
+        $query="select username,password ,admin from students where username= '".$username."' and password='".$hashedpass."' ";
+        $result=mysqli_query($connection,$query);
+        $count=mysqli_num_rows($result);
+        if($count > 0){
+            $row=mysqli_fetch_array($result);
+            
+                header("Location:test.php?admin=".$row['admin']."");
+            
+       
+        }else{
+            echo 'false';
+        }
+    }
+    --------------------------------------------------
+     if($count > 0)
+            {
+                echo $row['username'] . $row['password'];
+            }else{
+                echo 'There is not such SSN';
+            }
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            <?php
+     session_start();
+     $pageTitle='Staff';
+    if(isset($_SESSION['username']))
+    {
+       
+        include 'init.php';
+        
+        $do=isset($_GET['do'])?$_GET['do']:'Manage';
+/******************************************************** Start Manage Page Code ****************************************************************/
+    if($do=='Manage')
+    { 
+            
+            // If You Coming From Staff.php?do=Manage&page=Pending 
+            
+            $querys='';
+            if(isset($_GET['page']) && $_GET['page']=='Pending'){
+                $querys='AND active = 0';
+            }
+              
+            //Select All Admin Except Manager 
+            $query="Select * From staff where Staff_Type = 1 $querys ";
+            $result=mysqli_query($connection,$query);
+            if(!$result)
+            {
+                die("errror");
+            }
+/******************************************************** End Manage Page Code ****************************************************************/
+?>
+<!------------------------------------------------------- Start Manage Page Body ------------------------------------------------------------->
+
+    <h1 class="text-center"><?php echo lang('MANAGE_STAFF_TITLE') ?></h1>
+    <div class="container">
+        <div class="table-responsive">
+            <table class="main-table text-center table table-bordered">
+                <tr>
+                  <td><?php echo lang('STAFF_ID_T') ?></td>
+                  <td><?php echo lang('USERNAME_T') ?></td>
+                  <td><?php echo lang('EMAILE_T') ?></td>
+                  <td><?php echo lang('PHONE_T') ?></td>
+                  <td><?php echo lang('REGISTERED_DATE_T') ?></td>
+                  <td><?php echo lang('ACTION_T') ?></td>
+                </tr>
+                    
+        <?php
+               while($row=mysqli_fetch_array($result))
+               {
+                   echo'<tr>';
+                       echo'<td>'.$row['Staff_ID'].'</td>';
+                       echo'<td>'.$row['Staff_Name'].'</td>';
+                       echo'<td>'.$row['Staff_Email'].'</td>';
+                       echo'<td>'.$row['Staff_Phone'].'</td>';
+                       echo'<td>'.$row['Date'].'</td>';
+                       echo'<td>';
+                                echo '<a href="staff.php?do=Edit&Staff_ID='.$row['Staff_ID'].'" class="btn btn-success">
+                                <i class="fa fa-edit"></i>';
+                                echo lang('EDIT_T');
+                                echo '</a>';
+
+                                echo '&nbsp;<a href="staff.php?do=Delete&Staff_ID='.$row['Staff_ID'].'" class="btn btn-danger confirm">
+                                <i class="fa fa-user-times"></i>';
+                                echo lang('DELETE_T');
+                                echo'</a>';
+
+                                if($row['active']== 0)
+                                {
+                                echo'&nbsp;<a href="staff.php?do=Activate&Staff_ID='.$row['Staff_ID'].'" class=" btn btn-info activate">
+                                <i class="fa fa-user-check"></i>';
+                                echo lang('ACTIVE_T');
+                                echo'</a>';
+                                }
+
+                       echo '</td>';
+                   echo'</tr>';
+               }
+        ?>
+                 
+            </table>
+        </div>
+        <a href="staff.php?do=Add" class="btn btn-primary"><i class="fas fa-user-plus"></i><?php echo lang('ADD_NEW_STAFF_B') ?></a>
+    </div>
+<!------------------------------------------------------- End Manage Page Body ------------------------------------------------------------->
+
+<?php
+/******************************************************** Start Add Page ****************************************************************/
+    }elseif($do =='Add')
+    {  
+?>
+<!------------------------------------------------------- Start Add Page Body ------------------------------------------------------------->
+    <div class="container" > 
+    <h1 class="text-center"><?php echo lang('ADD_STAFF_TITLE') ?></h1>
+        <form action="?do=Insert" method="post" enctype="multipart/form-data"> <!--redircte to same page but send insert by GET -->
+            <!-- Start row one -->
+            <div class="form-row">
+                <!-- Start Field Staff SSN -->
+                <div class="form-group col-md-6">
+                    <label for="inputPassword4"><?php echo lang('PASSWORD_SSN') ?></label>
+                    <input type="password" name="password" class="form-control" autocomplete="new-passowrd" placeholder="<?php echo lang('E_PASSWORD') ?>" required="required">
+
+                </div>
+                <!-- End Field Staff SSN -->
+
+                <!-- Start Field Staff Name -->
+                <div class="form-group col-md-6">
+                    <label for="inputAddress"><?php echo lang('USERNAME_T') ?></label>
+                    <input type="text" name="username" class="form-control" placeholder="<?php echo lang('E_USERNAME') ?>" required="required" >
+                </div>
+                <!-- End Field Staff Name -->
+            </div>
+            <!-- End row one -->
+
+            <!-- Start row tow -->
+            <div class="form-row">
+                <!-- Start Field Staff Email -->
+                <div class="form-group col-md-6">
+                  <label for="inputEmail4"><?php echo lang('EMAILE_T') ?></label>
+                  <input type="text" name="email" class="form-control" autocomplete="off" placeholder="<?php echo lang('E_EMAIL') ?>" required="required">
+                </div>
+                <!-- End Field Staff Email -->
+
+                <!-- Start Field Staff Phone -->
+                <div class="form-group col-md-6">
+                    <label for="inputAddress"><?php echo lang('PHONE_T') ?></label>
+                    <input type="text" name="phone" class="form-control" id="inputAddress" placeholder="<?php echo lang('E_PHONE') ?>" required="required" >
+                </div>
+                <!-- End Field Staff Phone -->
+            </div>
+            <!-- End row Tow -->
+
+            <!-- Start row Three -->
+            <!-- Start Field Staff Type -->
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                  <label for="inputState"><?php echo lang('STAFF_TYPE') ?></label>
+                  <select name="admin" id="inputState" class="form-control">
+                      <option><?php echo lang('S_TYPE') ?></option>
+                      <option value="1"><?php echo lang('ADMIN') ?></option>
+                      <option value="2"><?php echo lang('MANAGER') ?></option>
+                  </select>
+                </div>
+            <!-- End Field Staff Type -->
+            <!-- Start Field Staff_Levels_ID-->
+            <div class="form-group col-md-6">
+              <label for="inputState"><?php echo lang('STUDY_LEVELS') ?></label>
+              <select name="fun" class="form-control">
+                  <option><?php echo lang('S_LEVELS') ?></option>
+                  <option  value="1"><?php echo lang('FIRST_LEVEL') ?></option>
+                  <option value="2"><?php echo lang('SECOUND_LEVEL') ?></option>
+                  <option value="3"><?php echo lang('THIRD_LEVEL') ?></option>
+                  <option value="4"><?php echo lang('FOURTH_LEVEL') ?></option>
+                  <option value="0"><?php echo lang('NOTHING') ?></option>
+              </select>
+            </div>
+            <!-- End Field Staff_Levels_ID -->
+            </div>
+            <!-- End row Three -->
+
+            <!-- Start row Four -->
+            <div class="form-row">
+              <div class="form-group col-md-6">
+                  <input type="file" name="image" class="custom-file-input" id="customFile">
+                  <label class="custom-file-label" for="customFile"><?php echo lang('CHOOSE_IMAGE') ?></label>
+              </div>
+            </div>
+            <!-- Start row Four -->
+
+            <!-- Button to Sent Data to Insert Page -->
+            <div class="col-md-12 text-center">
+                <button type="submit" class="btn btn-primary col-md-4 center-block"><i class="fas fa-user-plus"></i><?php echo lang('ADD_NEW_STAFF_B')?></button>
+            </div>
+        </form>
+    </div>
+<!------------------------------------------------------- End Add Page Body ----------------------------------------------------------------->
+         
+<?php 
+/******************************************************** Start Insert Page Code ***********************************************************/
+
+    }elseif($do=='Insert')
+    {
+            //Insert New Staff
+           // echo $_POST['username']. $_POST['password'] .$_POST['email'] .$_POST['admin'] .$_POST['fun'];
+            
+    echo '<div class="container" > ';
+
+        if($_SERVER['REQUEST_METHOD']=='POST')
+        {
+             echo"<h1 class='text-center'>Insert Staff</h1>";
+            //Get Variable from Form
+            $PassSSN  = $_POST['password'];
+            $Username = $_POST['username'];
+            $Email    = $_POST['email'];
+            $Phone    = $_POST['phone'];
+            $Admin    = $_POST['admin'];
+            $FunClass = $_POST['fun'];
+            $hashPass=sha1($_POST['password']);
+
+
+            //Upload image
+            $ImageName = $_FILES['image']['name'];
+            $ImageSize = $_FILES['image']['size'];
+            $ImageTmp  =  $_FILES['image']['tmp_name'];
+            $ImageType = $_FILES['image']['type'];
+            //List Of Allowed Type To Upload
+            $imageAllowedExtension=array("jpeg","png","jpg","gif");
+            //Get Image Extension
+            $imageExtension=strtolower(end(explode('.',$ImageName)));
+
+
+
+
+            //Validate The Form 
+            $FormErrors=array();
+
+            if(strlen($Username)< 4 || strlen($Username) >20 ){
+                $FormErrors[]=
+                    'UserName Not Can Less Than <strong> 4 Characters</strong> And Greater Than <strong> 20 Characters</strong> ';
+            }
+            if(empty($Username) ||empty($Email) || empty($Phone) || empty($Admin) || empty($PassSSN) || empty($ImageName) )
+            {
+                $FormErrors[]='All Filed Required';
+            }
+            if(!empty($ImageName) && !in_array($imageExtension,$imageAllowedExtension)){
+                $FormErrors[]='This Extension Not <strong>Allowed</strong>';
+            }
+            if($ImageSize > 4194304){
+                $FormErrors[]='Size of Image Not Procced <strong>4MB</strong>';
+            }
+            if(strlen($PassSSN) != 14){
+                $FormErrors[]='Enter The SSN that Consist From <strong>14 Numbers</strong>';
+            }
+
+
+            foreach($FormErrors as $error){
+                echo'<div class="alert alert-danger">' .$error .'</div>';
+            }
+            //Chech If There's No Error Proceed The Update Operation
+            if(empty($FormErrors)){
+                $iamges= rand(0,100000000).'_'.$ImageName;
+               move_uploaded_file($ImageTmp,"Upload\\".$iamges);
+
+                $check=checkItem("Staff_Name","staff",$Username);
+                $checkSSN=checkItem("Staff_SSN","staff",$hashPass);
+
+                if($check == 1 || $checkSSN ==1 ){
+                    $theMsg= '<div class="alert alert-danger" >sorry this user exist</div>';
+                    redirectHome($theMsg,'back');
+                }else{
+                    //Insert The DB Whith This Info
+                $query="Insert into staff(Staff_SSN,Staff_Name,Staff_Email,Staff_Phone,Staff_Type,Date,active,Staff_Level_ID,Staff_Image) VALUES('".$hashPass."','".$Username."','".$Email."','".$Phone."','".$Admin."',now(),1,'".$FunClass."','".$iamges."')";
+                $result=mysqli_query($connection,$query);
+                if(!empty($result)){
+
+                $theMsg= '<div class="alert alert-success alert-dismissible fade show" role="alert" >Data is Inserted</div>';
+                redirectHome($theMsg,'back');
+
+                    } 
+                }
+           }
+        }else
+        {
+         echo '<div class="container">';
+            $theMsg= '<div class="alert alert-danger">Sorry You Not Can Brows This Page Direct</div>';
+            redirectHome($theMsg,'back');
+         echo '</div>';
+
+        }
+        /*End Class Container */
+    echo '</dive>'; 
+/******************************************************** End Insert Page Code ***********************************************************/
+    
+    }elseif($do =='Edit'){ //Edit Page
+            
+            // Check If GET Request SSN Is Numeric & Get The Integer Value Of It 
+            
+            echo '<div class="container" > ';
+            
+            $Staff_id=isset($_GET['Staff_ID']) && is_numeric($_GET['Staff_ID'])?intval($_GET['Staff_ID']):0; //content ssn own admin
+            
+            
+            //Select All Data From DB Depend On This SSN
+            $query="select * from staff where Staff_ID='".$Staff_id."' Limit 1 ";
+            
+            //Execute Query
+            $result=mysqli_query($connection,$query);
+            
+            //If Select Content The Data $count Content The Number Of Row Featched
+            $count=mysqli_num_rows($result);
+            
+            //Fetch The Data and Store In Var $row
+            $row=mysqli_fetch_array($result);
+            
+            //If $count value greater than from 0 .. return data in inputs
+            if($count > 0)
+            {?>
+                <h1 class="text-center">Edit Profile Staff</h1>
+                <form action="?do=Update" method="post" enctype="multipart/form-data"> <!--redircte to same page but send insert by GET -->
+                    <input type="hidden" name="ID" value="<?php echo $Staff_id ?>" >
+                    <!-- Start row one -->
+                    <div class="form-row">
+                        <!-- Start Field Staff SSN -->
+                        <div class="form-group col-md-6">
+                            <label for="inputPassword4">Password (SSN)</label>
+                            <input type="hidden" name="oldpassword" value="<?php echo $row['Staff_SSN'] ?>" >
+                            <input type="password" name="newpassword" class="form-control" autocomplete="new-passowrd" placeholder="Leave Blank If You Don't Want Change">
+
+                        </div>
+                        <!-- End Field Staff SSN -->
+
+                        <!-- Start Field Staff Name -->
+                        <div class="form-group col-md-6">
+                            <label for="inputAddress">UserName</label>
+                            <input type="text" name="username" value="<?php echo $row['Staff_Name']?>" class="form-control" placeholder="Name Must Be Valid" required="required" >
+                        </div>
+                        <!-- End Field Staff Name -->
+                    </div>
+                    <!-- End row one -->
+
+                    <!-- Start row tow -->
+                    <div class="form-row">
+                        <!-- Start Field Staff Email -->
+                        <div class="form-group col-md-6">
+                          <label for="inputEmail4">E-mail</label>
+                          <input type="text" name="email" value="<?php echo $row['Staff_Email']?>" class="form-control" autocomplete="off" placeholder="E-mail Must Be Valid" required="required">
+                        </div>
+                        <!-- End Field Staff Email -->
+
+                        <!-- Start Field Staff Phone -->
+                        <div class="form-group col-md-6">
+                            <label for="inputAddress">Phone</label>
+                            <input type="text" name="phone" value="<?php echo $row['Staff_Phone']?>" class="form-control" id="inputAddress" placeholder="Phone" required="required" >
+                        </div>
+                        <!-- End Field Staff Phone -->
+                    </div>
+                    <!-- End row Tow -->
+
+                    <!-- Start row Three -->
+                    <!-- Start Field Staff Type -->
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                          <label for="inputState">Staff Type</label>
+                          <select name="admin" id="inputState" class="form-control">
+                              <option>Select Type</option>
+                              <option value="1">Admin</option>
+                              <option value="2">Manager</option>
+                          </select>
+                        </div>
+                    <!-- End Field Staff Type -->
+                    <!-- Start Field Staff_Levels_ID-->
+                    <div class="form-group col-md-6">
+                      <label for="inputState">Study Levels</label>
+                      <select name="fun" class="form-control">
+                          <option>Select Levels</option>
+                          <option  value="1">First Level</option>
+                          <option value="2">Secound Level</option>
+                          <option value="3">Third Level</option>
+                          <option value="4">Fourth Level</option>
+                      </select>
+                    </div>
+                    <!-- End Field Staff_Levels_ID -->
+                    </div>
+                    <!-- End row Three -->
+
+                    <!-- Start row Four -->
+                    <div class="form-row">
+                      <div class="form-group col-md-6">
+                          <input type="file" name="image" class="custom-file-input" id="customFile">
+                          <label class="custom-file-label" for="customFile">Choose Image</label>
+                      </div>
+                    </div>
+                    <!-- Start row Four -->
+
+                    <!-- Button to Sent Data to Insert Page -->
+                    <div class="col-md-12 text-center">
+                       <button type="submit" class="btn btn-primary col-md-4 center-block"><i class="far fa-save"></i> &nbsp;Save Change</button>
+                    </div>
+                </form>
+
+
+           
+     <?php 
+                //If $count not include data this else excuted
+            }else{
+               
+                echo '<div class="container">';
+                    $theMsg= '<div class="alert alert-danger">There is not such SSN</div>';
+                    redirectHome($theMsg);
+                 echo '</div>';
+                
+            }
+            echo '</div>';
+    }elseif($do=='Update'){ // Update Page
+            echo '<h1 class="text-center">Update Page</h1>';
+            echo '<div class="container" > ';
+            if($_SERVER['REQUEST_METHOD']=='POST'){
+                //Get Variable from Form
+                $Staff_Id = $_POST['ID'];
+                $Username = $_POST['username'];
+                $Email    = $_POST['email'];
+                $Phone    = $_POST['phone'];
+                $Admin    = $_POST['admin'];
+                $FunClass = $_POST['fun'];
+                
+                
+                //Password code
+                /*$pass='';if(empty($_POST['newpassword'])){$pass=$_POST['oldpassword'];}else{$pass=sha1($_POST['newpassword']);}*/
+                
+                 $pass=empty($_POST['newpassword']) ? $_POST['oldpassword']: sha1($_POST['newpassword']);
+                
+                //echo $ssn . $username . $password;
+                
+                //Upload image
+                $ImageName = $_FILES['image']['name'];
+                $ImageSize = $_FILES['image']['size'];
+                $ImageTmp  =  $_FILES['image']['tmp_name'];
+                $ImageType = $_FILES['image']['type'];
+                //List Of Allowed Type To Upload
+                $imageAllowedExtension=array("jpeg","png","jpg","gif");
+                //Get Image Extension
+                $imageExtension=strtolower(end(explode('.',$ImageName)));
+                
+                
+                
+               
+                //Validate The Form 
+                $FormErrors=array();
+                
+                if(strlen($Username)< 4 || strlen($Username) >20 ){
+                    $FormErrors[]=
+                        'UserName Not Can Less Than <strong> 4 Characters</strong> And Greater Than <strong> 20 Characters</strong> ';
+                }
+                if(strlen($_POST['newpassword'])>15){
+                    $FormErrors[]=
+                        'Please Enter SSN <strong> 14 Numbers</strong>';
+                }
+                if(empty($Username) ||empty($Email) || empty($Phone) || empty($Admin) || empty($ImageName) )
+                {
+                    $FormErrors[]='All Filed Required';
+                }
+                if(!empty($ImageName) && !in_array($imageExtension,$imageAllowedExtension)){
+                    $FormErrors[]='This Extension Not <strong>Allowed</strong>';
+                }
+                if($ImageSize > 4194304){
+                    $FormErrors[]='Size of Image Not Procced <strong>4MB</strong>';
+                }
+                
+                
+                foreach($FormErrors as $error){
+                    echo'<div class="alert alert-danger">' .$error .'</div>';
+                }
+                //Chech If There's No Error Proceed The Update Operation
+                if(empty($FormErrors)){
+                    $iamges= rand(0,100000000).'_'.$ImageName;
+                    move_uploaded_file($ImageTmp,"Upload\\".$iamges);
+                    //Update The DB Whith This Info
+                    $query="UPDATE Staff 
+                    SET Staff_SSN='".$pass."',Staff_Name='".$Username."',Staff_Email='".$Email."',Staff_Phone='".$Phone."',Staff_Type='".$Admin."',
+                    Staff_Level_ID='".$FunClass."',Staff_Image='".$iamges."' 
+                    WHERE Staff_ID='".$Staff_Id."' "; 
+                    $result=mysqli_query($connection,$query);
+                    if(!empty($result))
+                        $theMsg= '<div class="alert alert-success alert-dismissible fade show" role="alert" >Data is Updated</div>';
+                        redirectHome($theMsg,'back');
+                    }
+                }else{
+                echo '<div class="container">';
+                    $theMsg= '<div class="alert alert-danger">Sorry You Not Can Brows This Page Direct</div>';
+                    redirectHome($theMsg,'back');
+                 echo '</div>';
+                
+            }
+                echo '</div>';
+            
+
+        }elseif($do == 'Activate'){
+             echo '<h1 class="text-center">Activate Page</h1>';
+            echo '<div class="container" > ';
+                       // Check If GET Request SSN Is Numeric & Get The Integer Value Of It 
+
+                    $Staff_id=isset($_GET['Staff_ID']) && is_numeric($_GET['Staff_ID'])?intval($_GET['Staff_ID']) : 0; //content ssn own admin
+
+
+                    //Select All Data From DB Depend On This SSN
+                    //$query="select * from staff where Staff_ID='".$Staff_id."' Limit 1 ";
+                    $check=checkItem("Staff_ID","staff",$Staff_id);
+
+               
+                    //If $count value greater than from 0 .. return data in inputs
+                    if($check > 0)
+                    {
+                           $query="UPDATE staff SET active =1 WHERE Staff_ID='".$Staff_id."' "; 
+                             $result=mysqli_query($connection,$query);
+                            if(!empty($result))
+                                $theMsg= '<div class="alert alert-success alert-dismissible fade show" role="alert" >This Staff Is Activated </div>';
+                                redirectHome($theMsg,'back');
+
+
+                    }else{
+                        $theMsg='<div class="alert alert-danger">this id is not exist</div>';
+                        redirectHome($theMsg);
+
+                    }
+        
+                echo '</div>';
+        
+        
+}elseif($do='Delete'){
+            
+                    //Delete page
+            echo '<h1 class="text-center">Delete Page</h1>';
+            echo '<div class="container" > ';
+                       // Check If GET Request SSN Is Numeric & Get The Integer Value Of It 
+
+                    $Staff_id=isset($_GET['Staff_ID']) && is_numeric($_GET['Staff_ID'])?intval($_GET['Staff_ID']) : 0; //content ssn own admin
+
+
+                    //Select All Data From DB Depend On This SSN
+                    //$query="select * from staff where Staff_ID='".$Staff_id."' Limit 1 ";
+                    $check=checkItem("Staff_ID","staff",$Staff_id);
+
+                    //Execute Query
+                  //$result=mysqli_query($connection,$query);
+
+                    //If Select Content The Data $count Content The Number Of Row Featched
+                   // $count=mysqli_num_rows($result);
+
+                    //If $count value greater than from 0 .. return data in inputs
+                    if($check > 0)
+                    {
+                           $query="DELETE FROM staff WHERE Staff_ID='".$Staff_id."' "; 
+                             $result=mysqli_query($connection,$query);
+                            if(!empty($result))
+                                $theMsg= '<div class="alert alert-success alert-dismissible fade show" role="alert" >This Staff Is Deleted </div>';
+                                redirectHome($theMsg,'back');
+
+
+                    }else{
+                        $theMsg='<div class="alert alert-danger">this id is not exist</div>';
+                        redirectHome($theMsg);
+
+                    }
+        
+                echo '</div>';
+        }
+        
+       include $tpl.'footer.php'; 
+        
+    }else{
+        // If Not Register In Session Redirected To index.php 
+        header('location:index.php');
+    }
+
+?>
+/**************************************  Home Page To Posts  ***************************************************/
+ <div class="container">
+                 <br><br>
+                 <div class="row">
+                     <!-- Blog Entries Column -->
+                     <div class="col-md-12">
+                         <!-- Blog Post -->
+                         <div class="row">
+                             <div class="col col-md-6">
+                                <div class="card mb-6">
+                                    <img class="card-img-top" src="wo.jpg" width="750" height="300" alt="Card image cap">
+                                      <div class="card-body">
+                                        <h2 class="card-title text-info">Programming Language</h2>
+                                        <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Reiciendis aliquid atque, nulla? Quos cum ex quis soluta, a laboriosam. Dicta expedita corporis animi vero voluptate voluptatibus possimus, veniam magni quis!</p>
+                                        <a href="#" class="btn btn-success">Read More &rarr;</a>
+                                      </div>
+                                      <div class="card-footer text-muted">
+                                          Posted on January 1, 2017 by <a href="#"><?php echo $_SESSION['username'];?></a>
+                                      </div>
+                                </div>
+                             </div>
+                             <div class="col col-md-6">
+                                <!-- Blog Post -->
+                                 <div class="card mb-6">
+                                    <img class="card-img-top" src="ph.jpg" width="750" height="300" alt="Card image cap">
+                                      <div class="card-body">
+                                              <h2 class="card-title text-danger">Programming Language</h2>
+                                        <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Reiciendis aliquid atque, nulla? Quos cum ex quis soluta, a laboriosam. Dicta expedita corporis animi vero voluptate voluptatibus possimus, veniam magni quis!</p>
+                                        <a href="#" class="btn btn-info text-white">Read More &rarr;</a>
+                                      </div>
+                                      <div class="card-footer text-muted">
+                                          Posted on January 1, 2017 by <a href="#"><?php echo $_SESSION['username'];?></a>
+                                      </div>
+                                </div>
+                             </div>
+                         </div>
+                         <br>
+                          <div class="row">
+                             <div class="col col-md-6">
+                                <div class="card mb-6">
+                                    <img class="card-img-top" src="pa.jpg" width="750" height="300" alt="Card image cap">
+                                      <div class="card-body">
+                                        <h2 class="card-title text-danger">Programming Language</h2>
+                                        <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Reiciendis aliquid atque, nulla? Quos cum ex quis soluta, a laboriosam. Dicta expedita corporis animi vero voluptate voluptatibus possimus, veniam magni quis!</p>
+                                        <a href="#" class="btn btn-warning  text-white">Read More &rarr;</a>
+                                      </div>
+                                      <div class="card-footer text-muted">
+                                          Posted on January 1, 2017 by <a href="#"><?php echo $_SESSION['username'];?></a>
+                                      </div>
+                                </div>
+                             </div>
+                              <br>
+                             <div class="col col-md-6">
+                                <!-- Blog Post -->
+                                 <div class="card mb-6">
+                                    <img class="card-img-top" src="ma.jpg" width="750" height="300" alt="Card image cap">
+                                      <div class="card-body">
+                                              <h2 class="card-title text-success">Programming Language</h2>
+                                        <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Reiciendis aliquid atque, nulla? Quos cum ex quis soluta, a laboriosam. Dicta expedita corporis animi vero voluptate voluptatibus possimus, veniam magni quis!</p>
+                                        <a href="#" class="btn btn-danger">Read More &rarr;</a>
+                                      </div>
+                                      <div class="card-footer text-muted">
+                                          Posted on January 1, 2017 by <a href="#"><?php echo $_SESSION['username'];?></a>
+                                      </div>
+                                </div>
+                             </div>
+                         </div>
+                    </div>
+                 </div>
+             </div>
+*****************************************************************************
+ <br><br>
+            
+                <div class="table-responsive">
+                <table id="example" class="table table-striped table-bordered" style="width:100%">
+                    <thead>
+                        <tr class="table-danger">
+                            <td>News_Student_SSN</td>
+                            <td>News_Title</td>  
+                           <!-- <td >News_Body</td>-->
+                            <td >News_Link</td>
+                            <td >News_Other_Link</td>
+                            <td >News_Visible</td>
+                            <td >Date</td>
+                        </tr>
+                    </thead>
+                    
+                   <?php
+                        while($row = $row = mysqli_fetch_array($result)){
+                            // <td>'.$row["News_Body"].'</td>
+                            echo '<tr>
+                                <td>'.$row["News_Student_SSN"].'</td>
+                                <td>'.$row["News_Title"].'</td>
+                                <td>'.$row["News_Link"].'</td>
+                                <td>'.$row["News_Other_Link"].'</td>
+                                <td>'.$row["News_Visible"].'</td>
+                                <td>'.$row["Date"].'</td>
+                                </tr>';
+                        }
+                   ?>
+
+                </table>
+             </div>
+        
+        
+        
+        ************************************
+        $(function()
+ {
+   
+    'user strict';
+    //Dashboard
+    $('.toggle-info').click(function(){
+        $(this).toggleClass('selected').parent().next('.card-body').fadeToggle(300);
+        
+        if($(this).hasClass('selected')){
+            $(this).html('<i class="fa fa-minus fa-lg"></i>');
+        }else{
+            $(this).html('<i class="fa fa-plus fa-lg"></i>')
+        }
+    });
+    
+    $("#add_fields_placeholderValue").hide();
+        $("#showf").hide();
+    // hide placeholder on form focus
+    $('[placeholder]').focus(function(){
+        
+        $(this).attr('data-text',$(this).attr('placeholder'));
+        
+        $(this).attr('placeholder','');
+        
+    }).blur(function(){
+        
+       $(this).attr('placeholder',$(this).attr('data-text')); 
+    });
+    
+    
+        
+    // Add Asterisk On Required Field
+   /* $('input').each(function(){
+    
+        if($(this).attr('required') === 'required'){
+        $(this).after('<span class="asterisk" >*</span>');
+       
+            }
+        }); 
+    */
+    //Convert Password Field To Text Filed On Hover
+    var passField=$('.password');
+    $('.show-pass').hover(function(){
+       passField.attr('type','text'); 
+        
+    }, function(){
+        passField.attr('type','password');
+        
+    });
+    
+    //Confirmation message on Button
+    $('.confirm').click(function(){
+        return confirm('Are you sure?');
+    });
+    
+    //validation in email
+    $(document).ready(function()
+    {
+        $("#email").keyup(function(){
+           if(valideEmail()){
+                $("#email").css("border","1px solid green");
+                $("#emailMeg").html("<p class='text-success par'><i class='fa fa-check'></i> </p>");
+                
+            }else{
+                $("#email").css("border","1px solid #c0392b");
+                $("#emailMeg").html("<p class='text-danger par'><i class='fa fa-exclamation-circle'></i></p>");
+            }
+        });
+        $("#otherEmail").keyup(function(){
+           if(valideOtherEmail()){
+                $("#otherEmail").css("border","1px solid green");
+                $("#otherEmailMeg").html("<p class='text-success par'><i class='fa fa-check'></i> </p>");
+                
+            }else{
+                $("#otherEmail").css("border","1px solid #c0392b");
+                $("#otherEmailMeg").html("<p class='text-danger par'><i class='fa fa-exclamation-circle'></i></p>");
+            }
+        });
+    });
+
+    $(document).ready(function()
+    {
+        $("#name").keyup(function(){
+           if(emptyfiled()){
+                $("#name").css("border","1px solid green");
+                $("#nameMeg").html("<p class='text-success par'><i class='fa fa-check'></i> </p>");
+                
+            }else{
+                $("#name").css("border","1px solid #c0392b");
+                $("#nameMeg").html("<p class='text-danger par'><i class='fa fa-exclamation-circle'></i></p>");
+            }
+        });
+        
+        $("#body").keyup(function(){
+           if(emptybody()){
+                $("#body").css("border","1px solid green");
+                $("#bodyMeg").html("<p class='text-success par'><i class='fa fa-check'></i> </p>");
+                
+            }else{
+                $("#body").css("border","1px solid #c0392b");
+                $("#bodyMeg").html("<p class='text-danger par'><i class='fa fa-exclamation-circle'></i></p>");
+            }
+        });
+        
+        
+         $("#scode").keyup(function(){
+           if(scode()){
+                $("#scode").css("border","1px solid green");
+                $("#scodeMeg").html("<p class='text-success par'><i class='fa fa-check'></i> </p>");
+                
+            }else{
+                $("#scode").css("border","1px solid #c0392b");
+                $("#scodeMeg").html("<p class='text-danger par'><i class='fa fa-exclamation-circle'></i></p>");}});
+        
+        
+        
+        //Enabling a text field based on selecting a certain drop down value
+        $("select[name=f]").change(function() {
+            if (this.value == 20){
+                $("input[name=t]").prop("disabled", false);
+                $("#add_fields_placeholderValue").hide();
+            }else if(this.value == 7){
+                 $("input[name=t]").prop("disabled", true);
+                
+                 $("#conditionMsg").html("<div class='alert alert-success alert-dismissible fade show'><button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button>الرجاء تسديد الرسوم الدراسية , الرجاء طباعة اذن توريد ب 50 جنية, احضار عدد 2 طابع جامعة فئة خمسون قرش, احضار تمغة فئة واحد جنية </div>");
+                
+                $("input[name=t]").prop("disabled", true);
+                $("#add_fields_placeholderValue").show();
+                
+            }else if(this.value == 13){
+                $("#add_fields_placeholderValue").show();
+                 $("input[name=t]").prop("disabled", true);
+            }else if(this.value == 8){
+                $("#GmMsg").html("<div class='alert alert-danger alert-dismissible fade show'><button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button><i class='fa fa-exclamation-circle'></i> okkkkkkkkkkkkkkk </div>");
+                
+            }else{
+                $("input[name=t]").prop("disabled", true);
+                $("#add_fields_placeholderValue").hide();
+            }
+            
+        }).change();
+    });
+   
+        
+   $('.showf').click(function(){
+         $("#showf").show();
+    });
+    
+    
+    function valideEmail(){ var email=$("#email").val(); var reg=/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+    if(reg.test(email)){return true;}else{return false;}}
+     function valideOtherEmail(){ var otherEmail=$("#otherEmail").val(); var reg=/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+    if(reg.test(otherEmail)){return true;}else{return false;}}
+    
+    function emptyfiled(){var name=$("#name").val();if(name.length > 15){return true;}else{return false;}}
+    function emptybody(){var body=$("#body").val();if(body.length > 100){return true;}else{return false;}}
+    
+    function scode(){ var scode=$("#scode").val();if(scode.length > 15){return true;}else{return false;}}
+
+    // Connect TO DropDown To Each Other  
+     $(document).ready(function(){
+ $('.action').change(function(){
+  if($(this).val() != '')
+  {
+   var action = $(this).attr("id");
+   var query = $(this).val();
+   var result = '';
+   if(action == "Level")
+   {
+    result = 'Department';
+   }
+   else
+   {
+    result = 'Wish';
+   }
+   $.ajax({
+    url:"fetch.php",
+    method:"POST",
+    data:{action:action, query:query},
+    success:function(data){
+     $('#'+result).html(data);
+    }
+   })
+  }
+ });
+});
+
+/*sidebar*/
+$(".sidebar-dropdown > a").click(function() {
+      $(".sidebar-submenu").slideUp(200);
+      if ($(this).parent().hasClass("active")) 
+      {
+        $(".sidebar-dropdown").removeClass("active");
+        $(this).parent().removeClass("active");
+      } else {
+        $(".sidebar-dropdown").removeClass("active");
+        $(this).next(".sidebar-submenu").slideDown(200);
+        $(this).parent().addClass("active");
+      }
+  });
+
+  $("#close-sidebar").click(function() {
+      $(".page-wrapper").removeClass("toggled");
+  });
+  $("#show-sidebar").click(function() {
+       $(".page-wrapper").addClass("toggled");
+  });
+
+ 
+      load_data();
+      function load_data(page)  
+                  {  
+                       $.ajax({  
+                            url:"pagination.php",  
+                            method:"GET",  
+                            data:{page:page},  
+                            success:function(data){  
+                                 $('#pagination_data').html(data);  
+                            }  
+                       })  
+                  }  
+                  $(document).on('click', '.pagination_link', function(){  
+                       var page = $(this).attr("id");  
+                       load_data(page);  
+                  }); 
+
+      
+
+// Add active state to sidbar nav links
+    
+var path = window.location.href; 
+// because the 'href' property of the DOM element is the absolute path
+      
+$("#layoutSidenav_nav .sb-sidenav a.nav-link").each(function() {
+            
+if (this.href === path) {
+                
+$(this).addClass("active");
+           
+ }
+        
+});
+
+ 
+   // Toggle the side navigation
+    
+$("#sidebarToggle").on("click", function(e) {
+        
+e.preventDefault();
+        
+$("body").toggleClass("sb-sidenav-toggled");
+ 
+   });
+
+    $(document).ready(function(){
+    $('#example').DataTable();
+    });
+ 
+    
+ /////////////////////////////////////////////////////////////////////////////////////   
+function load_unseen_notification(view = '')
+ {
+  $.ajax({
+   url:"fetchs.php",
+   method:"POST",
+   data:{view:view},
+   dataType:"json",
+   success:function(data)
+   {
+    $('.notifications').html(data.notification);
+    if(data.unseen_notification > 0)
+    {
+     $('.count').html(data.unseen_notification);
+    }
+   }
+  });
+ }
+ 
+ load_unseen_notification();
+ 
+ /*$('#comment_form').on('submit', function(event){
+  event.preventDefault();
+  if($('#subject').val() != '' && $('#comment').val() != '')
+  {
+   var form_data = $(this).serialize();
+   $.ajax({
+    url:"Requests.php?do=Response",
+    method:"POST",
+    data:form_data,
+    success:function(data)
+    {
+     $('#comment_form')[0].reset();
+     load_unseen_notification();
+    }
+   });
+  }
+  else
+  {
+   alert("Both Fields are Required");
+  }
+ });*/
+ ('#comment_form').on('submit', function(event){
+  event.preventDefault();
+      load_unseen_notification();
+ });
+ $(document).on('click', '.notification', function(){
+  $('.count').html('');
+  load_unseen_notification('yes');
+ });
+ 
+ setInterval(function(){ 
+  load_unseen_notification();; 
+ }, 5000);
+ 
+
+});
+
+
+
+
+
+
+     

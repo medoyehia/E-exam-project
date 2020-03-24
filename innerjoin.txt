@@ -1,0 +1,28 @@
+SELECT student.Student_Name,student.Student_Code,levels.Level_Name,levels_department.Department_Name,wish_statment.Wish_Name,Request_Division,services.Filename
+FROM request
+INNER JOIN
+student
+ON
+student.Student_ID=request.Request_Student_ID
+INNER JOIN
+levels
+ON
+levels.Level_ID=request.Request_Level_ID
+INNER JOIN
+levels_department
+ON
+levels_department.Department_ID=request.Request_Dept_ID
+INNER JOIN
+wish_statment
+ON
+wish_statment.Wish_ID=request.Request_Wish_ID
+INNER JOIN
+services
+ON
+services.ID=request.Request_Classification
+
+Notice: Undefined index: Student_Accept in C:\xampp\htdocs\FinalGraduationProject\Control_Panel\Requests.php on line 86
+    echo '<button type="button" class="btn btn-warning text-white" data-toggle="modal" data-target="#myModal">
+                                 <i class="fa fa-eye"></i> View</button>';
+ echo '<a href="Requests.php?Request_ID='.$row['Request_ID'].'" class="btn btn-warning text-white" data-toggle="modal" data-target="#myModal"><i class="fa fa-eye"></i> View </a>';
+
